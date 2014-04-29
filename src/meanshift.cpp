@@ -110,7 +110,7 @@ void MeanShift::run()
         //set per-cluster votes count to 0
         perPointVote[clusterCount_]->setTo(0);
 
- //       std::cerr << "before stating iterations..." << std::endl;
+//        std::cerr << "before stating iterations..." << std::endl;
 
         while(countIter < maxIter_)
         {
@@ -223,6 +223,8 @@ void MeanShift::run()
 
 
     }
+
+//    std::cerr << "all iterations finished" << std::endl;
 
     int maxind = 0;
     clusterSizes_.assign(clusterCount_,0);

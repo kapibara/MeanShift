@@ -147,6 +147,11 @@ public:
         return result;
     }
 
+    ElemType *ptr()
+    {
+        return source_->ptr();
+    }
+
 private:
     flann::Matrix<ElemType> *source_;
 
@@ -261,6 +266,19 @@ public:
         }
 
         return result;
+    }
+
+    void getClusterCenter(int centerInd, std::vector<ElemType> &elem)
+    {
+        int ind = 0;
+        std::list<MatrixRow>::iterator i = centers_.begin();
+        while(ind < centerInd)
+        {
+            ind++;
+            i++;
+        }
+
+        std::copy((*i).ptr(),((*i).ptr()+(*i).dim()),elem.begin());
     }
 
     //since there is no copy constructor, lets cheat
