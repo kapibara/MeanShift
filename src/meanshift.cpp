@@ -37,9 +37,6 @@ void MeanShift::run()
     int count;
     double meanCount = 0;
 
-    //std::cerr << "before data allocation..." << std::endl;
-    //std::cerr.flush();
-
     int mergeTo;
     MatrixRow mrow(*points_);
     MatrixRow temp(points_->cols);
@@ -59,8 +56,6 @@ void MeanShift::run()
     if (index_!=0){
         delete index_;
     }
-    //std::cerr << "before index created...: " << points_->rows << std::endl;
-    //std::cerr.flush();
 
     index_ = new flann::Index<flann::L2_3D<ElemType> >(*points_, flann::KDTreeSingleIndexParams());
     index_->buildIndex();
@@ -88,8 +83,6 @@ void MeanShift::run()
     //add the matrix for the first cluster
     perPointVote.push_back(new MatrixRow(points_->rows));
 
-    // std::cerr << "everything is set up..." << std::endl;
-
     while(free_>0){
         //get next random point;
 
@@ -102,7 +95,7 @@ void MeanShift::run()
         //beenVisited_[seedIdx] = true;
         //set mean to the initial point
 
-        //std::cerr << "seedIdx: " << seedIdx << std::endl;
+        //std::cerr << "seedIdx: " << seedIdx << "size()" << beenVisited_.size() << std::endl;
 
         mean = mrow.setRow(seedIdx);
         //find mode
@@ -121,15 +114,12 @@ void MeanShift::run()
 
             neighboursFound = index_->radiusSearch(mean.matrix(),indices,dist,r2_,params);
 
-            //std::cerr << "neighboursFound: " << neighboursFound << std::endl;
-
             //compute the new weighted mean
             mean.setTo(0);
             meanCount = 0;
-            int iterrun = 0;
+
             for(int i=0; i<indices.cols; i++){
                 ind = indices_data[i];
-                iterrun++;
                 if (ind >= 0){
                     beenVisited_[ind] = true;
                     perPointVote[clusterCount_]->get(ind) +=1;

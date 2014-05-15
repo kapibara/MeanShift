@@ -255,6 +255,39 @@ public:
 
     }
 
+    flann::Matrix<double> getClusterWeights()
+    {
+        double *data = new double[clusterCount_];
+        flann::Matrix<double> result(data,1,clusterCount_);
+
+        for(int i=0; i<clusterCount_; i++){
+            data[i] = 0;
+        }
+
+        double fullweightssum = 0;
+        for(int i = 0; i < points_->rows; i++ )
+        {
+            if (weights_!=0){
+                data[data2cluster_[i]] += weights_->ptr()[i];
+                fullweightssum += weights_->ptr()[i];
+            }else{
+                data[data2cluster_[i]]+=1;
+            }
+        }
+
+        for(int i = 0; i < clusterCount_; i++ )
+        {
+            if (weights_!=0){
+                data[i] = data[i]/fullweightssum;
+            }else{
+                data[i] = data[i]/points_->rows;
+            }
+        }
+
+        return result;
+
+    }
+
     //since there is no copy constructor, lets cheat
     flann::Matrix<IndexType> getClusterIndices()
     {
